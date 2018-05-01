@@ -1,0 +1,9 @@
+{
+    "name": "ical-parser",
+    "version": "0.0.0",
+    "private": true,
+    "dependencies": {
+        "express": "^4.16.3",
+        "ical": "^0.5.0"
+    }
+}
