@@ -34,9 +34,11 @@ app.get('/info/:id', (req, res) => {
     console.log("Get info from ical with resource id = " + id + " and page = " + page);
 
     getInformationForIdAndPage(id, (data) => {
+        let hasNext = data.length > (page+1) * numberOfItemPerPage;
         data = data.slice(page * numberOfItemPerPage, page*numberOfItemPerPage + numberOfItemPerPage);
+        let result = { data: data, hasNext }
         res.status(200);
-        res.send(data);
+        res.send(result);
     });
 });
 
