@@ -75,10 +75,9 @@ public class ScheduleRetriever
 
 		// Parse data as JSON 
 		Debug.Log("Received: " + response);
-		JSONArray jsonRoomEvents = JSON.Parse(response).AsArray;
-        //JSONArray jsonRoomEvents = JSON.Parse(mock).AsArray;
-
-
+        JSONNode jsonObject = JSON.Parse(response);
+        JSONArray jsonRoomEvents = jsonObject["data"].AsArray;
+        hasNext = jsonObject["hasNext"].AsBool;
 
         // Create events view
         for (int i = 0; i < jsonRoomEvents.Count; i++) {
