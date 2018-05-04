@@ -28,14 +28,17 @@ let getInformationForIdAndPage = function(id, cb){
 
 app.get('/info/:id', (req, res) => {
     let id = req.params.id;
-    let page = req.query.page === undefined ? 0 : Number.parseInt(req.query.page);
-
-    
+    let page = req.query.page === undefined ? 0 : Number.parseInt(req.query.page); 
     console.log("Get info from ical with resource id = " + id + " and page = " + page);
 
     getInformationForIdAndPage(id, (data) => {
         let hasNext = data.length > (page+1) * numberOfItemPerPage;
         data = data.slice(page * numberOfItemPerPage, page*numberOfItemPerPage + numberOfItemPerPage);
+      
+        data.forEach(event => {
+            event.description = event.description.substring(0,event.description.indexOf("(Exporté le:")).trim();
+        });   
+
         let result = { data: data, hasNext }
         res.status(200);
         res.send(result);
