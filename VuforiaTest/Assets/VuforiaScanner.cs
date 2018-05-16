@@ -28,13 +28,11 @@ public class VuforiaScanner : MonoBehaviour
 
     private IEnumerator InitializeCamera()
     {
-        // Waiting a little seem to avoid the Vuforia's crashes.
         yield return new WaitForSeconds(1.25f);
 
         var isFrameFormatSet = CameraDevice.Instance.SetFrameFormat(mFormat, true);
         Debug.Log(String.Format("FormatSet : {0}", isFrameFormatSet));
-
-        // Force autofocus.
+        
         var isAutoFocus = CameraDevice.Instance.SetFocusMode(CameraDevice.FocusMode.FOCUS_MODE_CONTINUOUSAUTO);
         if (!isAutoFocus)
         {
@@ -46,7 +44,6 @@ public class VuforiaScanner : MonoBehaviour
 
     private void Update()
     {
-        //Debug.Log("Enter update");
         if (cameraInitialized)
         {
             try
@@ -54,14 +51,14 @@ public class VuforiaScanner : MonoBehaviour
                 var cameraFeed = CameraDevice.Instance.GetCameraImage(mFormat);
                 if (cameraFeed == null)
                 {
-                    //Debug.Log("No feed");
                     return;
                 }
 				var data = barCodeReader.Decode(cameraFeed.Pixels, cameraFeed.BufferWidth, cameraFeed.BufferHeight, RGBLuminanceSource.BitmapFormat.Gray8);
                 if (data != null)
                 {
-                    // QRCode detected.
                     Debug.LogError(data.Text);
+                    // TODO init buttons
+
                 }
                 else
                 {
