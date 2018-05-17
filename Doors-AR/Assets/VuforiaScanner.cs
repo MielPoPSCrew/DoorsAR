@@ -6,7 +6,7 @@ using ZXing;
 
 
 [AddComponentMenu("System/VuforiaScanner")]
-public class VuforiaScanner : MonoBehaviour
+public class VuforiaScanner : MonoBehaviour, ITrackableEventHandler
 {    
     private bool cameraInitialized;
     private bool scanning;
@@ -20,11 +20,13 @@ public class VuforiaScanner : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("STAAAAAAAAAAARt");
+        Debug.Log("STAAAAAAAAAAART");
         barCodeReader = new BarcodeReader();
         StartCoroutine(InitializeCamera());
         scanning = false;
         previousData = "";
+        TrackableBehaviour target = GameObject.Find("Target").GetComponent<TrackableBehaviour>();
+        target.RegisterTrackableEventHandler(this);
     }
 
     private IEnumerator InitializeCamera()
@@ -53,6 +55,7 @@ public class VuforiaScanner : MonoBehaviour
                 var cameraFeed = CameraDevice.Instance.GetCameraImage(mFormat);
                 if (cameraFeed == null)
                 {
+                    //throw new Exception("Camera feed doesn't work");
                     return;
                 }
 				var data = barCodeReader.Decode(cameraFeed.Pixels, cameraFeed.BufferWidth, cameraFeed.BufferHeight, RGBLuminanceSource.BitmapFormat.Gray8);
@@ -63,24 +66,34 @@ public class VuforiaScanner : MonoBehaviour
                         Debug.LogError(data.Text);
                         previousData = data.Text;
                         roomAR = new RoomsAR(int.Parse(data.Text));
+                        Debug.Log("After");
                     }
                     scanning = true;
-                    // TODO init buttons
 
                 }
                 else
                 {
-                    if(scanning)
-                    {
-                        roomAR.onClose();
-                        scanning = false;
-                    }
                 }
             }
             catch (Exception e)
             {
                 Debug.LogError(e);
+                //Environment.Exit(1);
             }
         }
-    }    
+    }
+
+    public void OnTrackableStateChanged(TrackableBehaviour.Status previousStatus, TrackableBehaviour.Status newStatus)
+    {
+        if (newStatus.Equals(TrackableBehaviour.Status.NOT_FOUND) && !previousStatus.Equals(TrackableBehaviour.Status.NOT_FOUND))
+        {
+            if(scanning)
+            {
+                scanning = false;
+                Debug.Log("Lost track");
+                if(roomAR != null) roomAR.onClose();
+                previousData = "";
+            }
+        }
+    }
 }

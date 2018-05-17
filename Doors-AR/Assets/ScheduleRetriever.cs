@@ -13,7 +13,7 @@ public class ScheduleRetriever
 
     public const string API_URL = "http://vr.tcottin.fr/info/";
 
-    private string mock = "{data:[{\"type\":\"VEVENT\",\"params\":[],\"dtstamp\":\"20180502T140333Z\",\"start\":\"2018-05-07T06:30:00.000Z\",\"end\":\"2018-05-07T10:30:00.000Z\",\"summary\":\"Informatique d'entreprise et cloud\",\"location\":\"620 - B009\",\"description\":\"\\n\\nAPP5 INFO\\n(Exporté le:02/05/2018 16:03)\\n\",\"uid\":\"ADE60323031372d323031382d343637362d302d30\",\"created\":\"19700101T000000Z\",\"last-modified\":\"20180502T140333Z\",\"sequence\":\"1812257813\"},{\"type\":\"VEVENT\",\"params\":[],\"dtstamp\":\"20180502T140333Z\",\"start\":\"2018-05-09T06:30:00.000Z\",\"end\":\"2018-05-09T10:30:00.000Z\",\"summary\":\"Informatique d'entreprise et cloud\",\"location\":\"620 - B009\",\"description\":\"\\n\\nAPP5 INFO\\n(Exporté le:02/05/2018 16:03)\\n\",\"uid\":\"ADE60323031372d323031382d343637372d302d30\",\"created\":\"19700101T000000Z\",\"last-modified\":\"20180502T140333Z\",\"sequence\":\"1812257813\"},{\"type\":\"VEVENT\",\"params\":[],\"dtstamp\":\"20180502T140333Z\",\"start\":\"2018-05-14T06:30:00.000Z\",\"end\":\"2018-05-14T10:30:00.000Z\",\"summary\":\"Systèmes électromécaniques industriels\",\"location\":\"620 - B009\",\"description\":\"\\n\\nMOSTAFA Ali\\nDIALLO Demba\\nAPP3 EES\\n(Exporté le:02/05/2018 16:03)\\n\",\"uid\":\"ADE60323031372d323031382d3430392d302d31\",\"created\":\"19700101T000000Z\",\"last-modified\":\"20180502T140333Z\",\"sequence\":\"1812257813\"},{\"type\":\"VEVENT\",\"params\":[],\"dtstamp\":\"20180502T140333Z\",\"start\":\"2018-05-14T11:30:00.000Z\",\"end\":\"2018-05-14T15:30:00.000Z\",\"summary\":\"Systèmes électromécaniques industriels\",\"location\":\"620 - B009\",\"description\":\"\\n\\nMOSTAFA Ali\\nDIALLO Demba\\nAPP3 EES\\n(Exporté le:02/05/2018 16:03)\\n\",\"uid\":\"ADE60323031372d323031382d3830332d302d30\",\"created\":\"19700101T000000Z\",\"last-modified\":\"20180502T140333Z\",\"sequence\":\"1812257813\"}], hasNext=\"false\"";
+    //private string mock = "{data:[{\"type\":\"VEVENT\",\"params\":[],\"dtstamp\":\"20180502T140333Z\",\"start\":\"2018-05-07T06:30:00.000Z\",\"end\":\"2018-05-07T10:30:00.000Z\",\"summary\":\"Informatique d'entreprise et cloud\",\"location\":\"620 - B009\",\"description\":\"\\n\\nAPP5 INFO\\n(Exporté le:02/05/2018 16:03)\\n\",\"uid\":\"ADE60323031372d323031382d343637362d302d30\",\"created\":\"19700101T000000Z\",\"last-modified\":\"20180502T140333Z\",\"sequence\":\"1812257813\"},{\"type\":\"VEVENT\",\"params\":[],\"dtstamp\":\"20180502T140333Z\",\"start\":\"2018-05-09T06:30:00.000Z\",\"end\":\"2018-05-09T10:30:00.000Z\",\"summary\":\"Informatique d'entreprise et cloud\",\"location\":\"620 - B009\",\"description\":\"\\n\\nAPP5 INFO\\n(Exporté le:02/05/2018 16:03)\\n\",\"uid\":\"ADE60323031372d323031382d343637372d302d30\",\"created\":\"19700101T000000Z\",\"last-modified\":\"20180502T140333Z\",\"sequence\":\"1812257813\"},{\"type\":\"VEVENT\",\"params\":[],\"dtstamp\":\"20180502T140333Z\",\"start\":\"2018-05-14T06:30:00.000Z\",\"end\":\"2018-05-14T10:30:00.000Z\",\"summary\":\"Systèmes électromécaniques industriels\",\"location\":\"620 - B009\",\"description\":\"\\n\\nMOSTAFA Ali\\nDIALLO Demba\\nAPP3 EES\\n(Exporté le:02/05/2018 16:03)\\n\",\"uid\":\"ADE60323031372d323031382d3430392d302d31\",\"created\":\"19700101T000000Z\",\"last-modified\":\"20180502T140333Z\",\"sequence\":\"1812257813\"},{\"type\":\"VEVENT\",\"params\":[],\"dtstamp\":\"20180502T140333Z\",\"start\":\"2018-05-14T11:30:00.000Z\",\"end\":\"2018-05-14T15:30:00.000Z\",\"summary\":\"Systèmes électromécaniques industriels\",\"location\":\"620 - B009\",\"description\":\"\\n\\nMOSTAFA Ali\\nDIALLO Demba\\nAPP3 EES\\n(Exporté le:02/05/2018 16:03)\\n\",\"uid\":\"ADE60323031372d323031382d3830332d302d30\",\"created\":\"19700101T000000Z\",\"last-modified\":\"20180502T140333Z\",\"sequence\":\"1812257813\"}], hasNext=\"false\"";
 
     private int page = 0; // FIXME: Use that shit // @tcottin : why do that needs a fix? The page should be an attribute that allows us to know where we are
     private int roomId = -1; // FIXME: Use an extenal parameter // @tcottin: fixed - add it as constructor parameter
@@ -21,19 +21,24 @@ public class ScheduleRetriever
     private bool hasPrevious = false;
     private List<GameObject> roomEventUIs = new List<GameObject>();
 
-    private GameObject previousPlane = GameObject.Find("PreviousButtonPlane");
-    private GameObject nextPlane = GameObject.Find("NextButtonPlane");
+    private GameObject previousPlane;
+    private GameObject nextPlane;
 
     private GameObject canevas;
 
     public ScheduleRetriever(int roomId)
     {
+        previousPlane = GameObject.Find("PreviousButtonPlane");
+        nextPlane = GameObject.Find("NextButtonPlane");
         MyController.Instance.Retriever = this;
         Debug.Log("Run");
         this.roomId = roomId;
-        this.roomId = 1604;
         canevas = GameObject.Instantiate(Resources.Load("Canevas")) as GameObject;
+        Transform target = GameObject.Find("Target").GetComponent<Transform>();
+        canevas.transform.SetParent(target);
         canevas.transform.rotation = new Quaternion(90, 0, 0, 0);
+        canevas.transform.position = new Vector3(1.5f, 0f, 0f);
+        canevas.transform.localScale *= 3;
         ShowPage();
 
     }
@@ -197,10 +202,12 @@ public class ScheduleRetriever
             return this.hasPrevious;
         }
     }
-
+     
     public void Close()
     {
-        GameObject canevas = GameObject.Find("Canevas");
+        previousPlane.SetActive(true);
+        nextPlane.SetActive(true);
         GameObject.Destroy(canevas);
+        canevas = null;
     }
 }
