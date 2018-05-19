@@ -2,7 +2,7 @@
 
 ## Presentation
 
-This project has been realized for a VR course at [Polytech Paris-Sud](https://polytech.u-psud.fr).
+This project has been realized for a VR course at [Polytech Paris-Sud](https://www.polytech.u-psud.fr).
 
 It allows students or personals to get the schedule of a room thanks to a QR Code placed on the door. 
 
