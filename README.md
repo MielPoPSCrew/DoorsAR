@@ -19,7 +19,7 @@ This projects contains to sub-projects:
 
 ### To run and build the app
 - Android SDK for your phone
-- Unity (strongly recommended: 2017.4.2f2)
+- Unity (strongly recommended: 2017.4.2f2, available [here](https://unity3d.com/fr/get-unity/download/archive))
 - An Android phone - if you want to test it on a device
 
 ## How to run
